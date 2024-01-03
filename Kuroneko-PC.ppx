@@ -2,15 +2,15 @@
 <ProxifierProfile version="102" platform="Windows" product_id="0" product_minver="400">
 	<Options>
 		<Resolve>
-			<AutoModeDetection enabled="true" />
+			<AutoModeDetection enabled="false" />
 			<ViaProxy enabled="false" />
-			<ExclusionList OnlyFromListMode="false">%ComputerName%; localhost; *.local</ExclusionList>
+			<ExclusionList OnlyFromListMode="false">%ComputerName%; localhost; *.local;</ExclusionList>
 			<DnsUdpMode>0</DnsUdpMode>
 		</Resolve>
-		<Encryption mode="disabled" />
+		<Encryption mode="basic" />
 		<ConnectionLoopDetection enabled="true" resolve="true" />
-		<ProcessOtherUsers enabled="false" />
-		<ProcessServices enabled="false" />
+		<ProcessOtherUsers enabled="true" />
+		<ProcessServices enabled="true" />
 		<HandleDirectConnections enabled="false" />
 		<HttpProxiesSupport enabled="false" />
 	</Options>
@@ -19,7 +19,7 @@
 			<Options>0</Options>
 			<Port>7890</Port>
 			<Address>127.0.0.1</Address>
-			<Label>Clash</Label>
+			<Label>Clash-Https</Label>
 		</Proxy>
 		<Proxy id="101" type="SOCKS5">
 			<Options>0</Options>
@@ -33,30 +33,40 @@
 			<Address>127.0.0.1</Address>
 			<Label>V2Ray-HTTPS</Label>
 		</Proxy>
+		<Proxy id="103" type="SOCKS5">
+			<Options>0</Options>
+			<Port>7890</Port>
+			<Address>127.0.0.1</Address>
+			<Label>Clash-Socks5</Label>
+		</Proxy>
 	</ProxyList>
-	<ChainList />
+	<ChainList>
+		<Chain id="104" type="redundancy">
+			<RedundancyRecheckTime>60</RedundancyRecheckTime>
+			<RedundancyRecheck>false</RedundancyRecheck>
+			<RedundancyTryDirect>true</RedundancyTryDirect>
+			<RedundancyTimeout>100</RedundancyTimeout>
+			<Proxy enabled="true">100</Proxy>
+			<Proxy enabled="true">102</Proxy>
+			<Proxy enabled="true">101</Proxy>
+			<Name>clash->v2ray</Name>
+		</Chain>
+	</ChainList>
 	<RuleList>
 		<Rule enabled="true">
-			<Action type="Proxy">101</Action>
-			<Targets>dog.ssrdog.com;</Targets>
-			<Name>Websites-Proxy</Name>
+			<Action type="Direct" />
+			<Targets>192.*.*.*;</Targets>
+			<Name>LAN</Name>
 		</Rule>
 		<Rule enabled="true">
 			<Action type="Direct" />
-			<Targets>fanyi.baidu.com;
-baidu.com;</Targets>
-			<Name>Websites-Passthrough</Name>
+			<Targets>localhost; 127.0.0.1; %ComputerName%; ::1</Targets>
+			<Name>Localhost</Name>
 		</Rule>
 		<Rule enabled="true">
 			<Action type="Direct" />
-			<Targets>sub.dc-sub1.com;
-apiv2.pptiok2020.com;
-host.ssrbox.com;</Targets>
-			<Name>VPN ISP</Name>
-		</Rule>
-		<Rule enabled="true">
-			<Action type="Direct" />
-			<Applications>v2rayN.exe;xray.exe;</Applications>
+			<Applications>v2rayN.exe;
+xray.exe;</Applications>
 			<Name>V2Ray</Name>
 		</Rule>
 		<Rule enabled="true">
@@ -66,14 +76,59 @@ host.ssrbox.com;</Targets>
 		</Rule>
 		<Rule enabled="true">
 			<Action type="Direct" />
-			<Targets>localhost; 127.0.0.1; %ComputerName%; ::1</Targets>
-			<Name>Localhost</Name>
+			<Targets>steam*.*;
+*.dl.eccdnx.*;
+dl.steam.clngaa.com;
+xz.pphimalayanrt.com;</Targets>
+			<Applications>steam.exe;</Applications>
+			<Name>Steam-download</Name>
+		</Rule>
+		<Rule enabled="true">
+			<Action type="Direct" />
+			<Applications>ramboplay.ra2.exe;
+systemsettings.exe;</Applications>
+			<Name>Apps-Passthrough</Name>
+		</Rule>
+		<Rule enabled="false">
+			<Action type="Proxy">101</Action>
+			<Name>Apps-Proxy</Name>
+		</Rule>
+		<Rule enabled="true">
+			<Action type="Direct" />
+			<Targets>*.baidu.*;
+*.juejin.*;
+*.zijieapi.*;
+*.115.*;
+*.processon.*;
+*.zhihu.*;
+140.249.62.213;
+*.tencent.*;
+*.steamcontent.*;
+*.steamserver.*;</Targets>
+			<Name>Domain-Passthrough</Name>
 		</Rule>
 		<Rule enabled="true">
 			<Action type="Proxy">101</Action>
-			<Targets>steamcommunity.com</Targets>
-			<Applications>steam.exe;steamservice.exe;steamwebhelper.exe;chrome.exe;msedge.exe;</Applications>
-			<Name>steamcommunity</Name>
+			<Targets>dog.ssrdog.com;
+down.qq.com;
+*.google.*;
+*.bing.*;
+torrentz2.nz;
+*.codex.*;
+*.figma.*;
+*.steampowered.*;
+*.elamigos-games.*;
+*.youtuebe.*;
+*.gamer520.*;
+xxxxx528.*;</Targets>
+			<Name>Domain-Proxy</Name>
+		</Rule>
+		<Rule enabled="true">
+			<Action type="Proxy">101</Action>
+			<Targets>sub.dc-sub1.com;
+apiv2.pptiok2020.com;
+host.ssrbox.com;</Targets>
+			<Name>VPN ISP</Name>
 		</Rule>
 		<Rule enabled="true">
 			<Action type="Proxy">101</Action>
@@ -81,18 +136,19 @@ host.ssrbox.com;</Targets>
 			<Name>Steam</Name>
 		</Rule>
 		<Rule enabled="true">
-			<Action type="Proxy">100</Action>
-			<Applications>msedge.exe;chrome.exe;115chrome.exe;</Applications>
-			<Name>WebBrowser</Name>
+			<Action type="Proxy">101</Action>
+			<Targets>*.steamcommunity.*;</Targets>
+			<Applications>steam.exe;steamservice.exe;steamwebhelper.exe;chrome.exe;msedge.exe;</Applications>
+			<Name>steamcommunity</Name>
 		</Rule>
 		<Rule enabled="true">
-			<Action type="Proxy">100</Action>
+			<Action type="Proxy">101</Action>
 			<Applications>Playnite.DesktopApp.exe;</Applications>
 			<Name>Gaming</Name>
 		</Rule>
 		<Rule enabled="true">
-			<Action type="Proxy">101</Action>
-			<Applications>RiotClientServices.exe</Applications>
+			<Action type="Proxy">102</Action>
+			<Applications>RiotClientServices.exe;riotclientux.exe;</Applications>
 			<Name>Riot</Name>
 		</Rule>
 		<Rule enabled="true">
@@ -101,14 +157,23 @@ host.ssrbox.com;</Targets>
 			<Name>WinApp</Name>
 		</Rule>
 		<Rule enabled="true">
-			<Action type="Proxy">101</Action>
-			<Applications>ssh.exe;</Applications>
-			<Name>ssh</Name>
+			<Action type="Proxy">103</Action>
+			<Applications>msedge.exe;
+chrome.exe;
+115chrome.exe;
+twinkstar.exe;
+firefox.exe;</Applications>
+			<Name>WebBrowser</Name>
 		</Rule>
-		<Rule enabled="true">
+		<Rule enabled="false">
 			<Action type="Proxy">100</Action>
 			<Applications>shmmsns.qpic.cn;</Applications>
 			<Name>wechat</Name>
+		</Rule>
+		<Rule enabled="true">
+			<Action type="Proxy">100</Action>
+			<Applications>TeamViewer.exe;</Applications>
+			<Name>TeamViewer.exe</Name>
 		</Rule>
 		<Rule enabled="true">
 			<Action type="Direct" />
